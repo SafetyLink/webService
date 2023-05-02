@@ -1,0 +1,4 @@
+httpd:
+  port: :3000
+rabbitMQ:
+  connectionUrl: amqp://guest:guest@localhost:5672/
