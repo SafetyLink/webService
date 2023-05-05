@@ -5,8 +5,8 @@ go 1.20
 replace github.com/SafetyLink/commons => ../../commons
 
 require (
-	buf.build/gen/go/asavor/safetylink/grpc/go v1.3.0-20230503003809-2accec1d0e5f.1
-	buf.build/gen/go/asavor/safetylink/protocolbuffers/go v1.30.0-20230503003809-2accec1d0e5f.1
+	buf.build/gen/go/asavor/safetylink/grpc/go v1.3.0-20230505023933-2ce6101894a1.1
+	buf.build/gen/go/asavor/safetylink/protocolbuffers/go v1.30.0-20230505023933-2ce6101894a1.1
 	github.com/SafetyLink/commons v0.0.0-00010101000000-000000000000
 	github.com/gofiber/fiber/v2 v2.44.0
 	github.com/joho/godotenv v1.5.1
@@ -17,7 +17,7 @@ require (
 )
 
 require (
-	buf.build/gen/go/asavor/safetylink/bufbuild/connect-go v1.7.0-20230503003809-2accec1d0e5f.1 // indirect
+	buf.build/gen/go/asavor/safetylink/bufbuild/connect-go v1.7.0-20230505023933-2ce6101894a1.1 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect

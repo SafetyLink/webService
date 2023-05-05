@@ -7,7 +7,7 @@ import (
 )
 
 func NewRabbitMQProvider(logger *zap.Logger, config *internal.Config) *amqp.Connection {
-	conn, err := amqp.Dial(config.RabbitMQ.ConnectionUrl)
+	conn, err := amqp.Dial(config.RabbitMQ.ConnectionURL)
 	if err != nil {
 		logger.Panic("failed to connect to RabbitMQ")
 	}

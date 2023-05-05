@@ -1,12 +1,20 @@
 package internal
 
 type Config struct {
-	Httpd    httpd    `yaml:"httpd"`
-	RabbitMQ rabbitMQ `yaml:"rabbitMQ"`
+	Httpd    Httpd    `yaml:"httpd"`
+	RabbitMQ RabbitMQ `yaml:"rabbitMQ"`
+	Services Services `yaml:"services"`
 }
-type httpd struct {
+type Httpd struct {
 	Port string `yaml:"port"`
 }
-type rabbitMQ struct {
-	ConnectionUrl string `yaml:"connectionUrl"`
+type RabbitMQ struct {
+	ConnectionURL string `yaml:"connectionUrl"`
+}
+type AuthenticationService struct {
+	Name string `yaml:"name"`
+	Port string `yaml:"port"`
+}
+type Services struct {
+	AuthenticationService AuthenticationService `yaml:"authenticationService"`
 }

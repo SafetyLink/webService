@@ -7,7 +7,9 @@ import (
 	"github.com/SafetyLink/webService/internal"
 	"github.com/SafetyLink/webService/internal/controller/httpd"
 	"github.com/SafetyLink/webService/internal/domain/message"
+	"github.com/SafetyLink/webService/internal/infra/adapters/clients"
 	"github.com/SafetyLink/webService/internal/infra/adapters/rabbitMQ"
+	"github.com/SafetyLink/webService/internal/infra/grpcUserRepository"
 	"github.com/SafetyLink/webService/internal/infra/rmqPublisherRepository"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
@@ -34,6 +36,10 @@ func main() {
 		fx.Provide(rmqPublisherRepository.NewRabbitMQPubRepository),
 
 		fx.Provide(message.NewMessageSrv),
+
+		fx.Provide(clients.GrpcAuthenticationClient),
+
+		fx.Provide(grpcUserRepository.NewGrpcUserRepository),
 
 		fx.Provide(httpd.NewWebServiceHttpServer),
 
