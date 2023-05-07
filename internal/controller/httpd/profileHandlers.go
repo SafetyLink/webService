@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func (s *WebServiceHttpServer) getProfile(c *fiber.Ctx) error {
+func (s *WebServiceHttpServer) getUserProfileByID(c *fiber.Ctx) error {
 	profileID, err := c.ParamsInt("profileID")
 	if err != nil {
 		return err
@@ -17,5 +17,16 @@ func (s *WebServiceHttpServer) getProfile(c *fiber.Ctx) error {
 	}
 
 	response.SuccessDataJson(c, 200, user)
+	return nil
+}
+
+func (s *WebServiceHttpServer) getProfile(c *fiber.Ctx) error {
+	profile, err := s.GrpcUserRepo.GetProfile(c.Context(), int64(3))
+	if err != nil {
+		return err
+	}
+	profile.Security = nil
+
+	response.SuccessDataJson(c, 200, profile)
 	return nil
 }

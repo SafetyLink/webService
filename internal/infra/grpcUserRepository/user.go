@@ -20,7 +20,7 @@ func NewGrpcUserRepository(userGrpc *grpc.ClientConn) repo.User {
 	}
 }
 
-func (gs GrpcUserRepo) GetUserByID(ctx context.Context, userID int64) (*types.User, error) {
+func (gs *GrpcUserRepo) GetUserByID(ctx context.Context, userID int64) (*types.User, error) {
 	userResp, err := gs.UserGrpc.GetUserByID(ctx, &authenticationv1.GetUserByIDRequest{
 		UserId: userID,
 	})
@@ -31,5 +31,15 @@ func (gs GrpcUserRepo) GetUserByID(ctx context.Context, userID int64) (*types.Us
 	}
 
 	return userIDToModel(userResp), nil
+
+}
+
+func (gs *GrpcUserRepo) GetProfile(ctx context.Context, userID int64) (*types.User, error) {
+	profileResp, err := gs.UserGrpc.GetSelf(ctx, &authenticationv1.GetSelfRequest{UserId: userID})
+	if err != nil {
+		return &types.User{}, err
+	}
+
+	return profileToModel(profileResp), nil
 
 }

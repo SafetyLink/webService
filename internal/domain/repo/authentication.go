@@ -12,4 +12,5 @@ type Authentication interface {
 
 type User interface {
 	GetUserByID(ctx context.Context, userID int64) (*types.User, error)
+	GetProfile(ctx context.Context, userID int64) (*types.User, error)
 }
