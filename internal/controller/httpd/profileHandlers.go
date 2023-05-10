@@ -21,7 +21,7 @@ func (s *WebServiceHttpServer) getUserProfileByID(c *fiber.Ctx) error {
 }
 
 func (s *WebServiceHttpServer) getProfile(c *fiber.Ctx) error {
-	profile, err := s.GrpcUserRepo.GetProfile(c.Context(), int64(3))
+	profile, err := s.GrpcUserRepo.GetProfile(c.Context(), int64(2))
 	if err != nil {
 		return err
 	}

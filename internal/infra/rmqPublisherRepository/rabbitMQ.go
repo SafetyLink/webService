@@ -3,9 +3,12 @@ package rmqPublisherRepository
 import (
 	"context"
 	"encoding/json"
+	"github.com/SafetyLink/commons/errors"
+	"github.com/SafetyLink/commons/otel"
 	"github.com/SafetyLink/commons/types"
 	"github.com/SafetyLink/webService/internal/domain/repo"
 	amqp "github.com/rabbitmq/amqp091-go"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
@@ -13,6 +16,7 @@ type RabbitMQPubRepository struct {
 	rabbitMQChannel *amqp.Channel
 	rabbitMQQueue   amqp.Queue
 	logger          *zap.Logger
+	tracer          trace.Tracer
 }
 
 func NewRabbitMQPubRepository(logger *zap.Logger, rabbitMQConn *amqp.Connection) repo.RabbitMQ {
@@ -43,10 +47,12 @@ func NewRabbitMQPubRepository(logger *zap.Logger, rabbitMQConn *amqp.Connection)
 }
 
 func (rr *RabbitMQPubRepository) PublishMessage(ctx context.Context, message types.Message) error {
+	ctx, span := rr.tracer.Start(ctx, "rabbitMQPublisherRepo.publishMessage")
+	defer span.End()
+
 	jsonMessage, err := json.Marshal(message)
 	if err != nil {
-		rr.logger.Error("failed to marshal message to JSON", zap.Error(err))
-		return err
+		return otel.RecordError(errors.ErrInternal, err, "failed to marshal message to JSON", span, rr.logger)
 	}
 
 	err = rr.rabbitMQChannel.PublishWithContext(ctx,
@@ -61,7 +67,7 @@ func (rr *RabbitMQPubRepository) PublishMessage(ctx context.Context, message typ
 		})
 	if err != nil {
 		rr.logger.Error("failed to publish message", zap.Error(err))
-		return err
+		return otel.RecordError(errors.ErrInternal, err, "failed to publish message", span, rr.logger)
 	}
 
 	return nil
