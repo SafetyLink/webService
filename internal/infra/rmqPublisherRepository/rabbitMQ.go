@@ -52,7 +52,8 @@ func (rr *RabbitMQPubRepository) PublishMessage(ctx context.Context, message typ
 
 	jsonMessage, err := json.Marshal(message)
 	if err != nil {
-		return otel.RecordError(errors.ErrInternal, err, "failed to marshal message to JSON", span, rr.logger)
+		rr.logger.Error("failed to marshal message to JSON", zap.Error(err))
+		return otel.RecordError(errors.ErrInternal, err, "failed to marshal message to JSON", span)
 	}
 
 	err = rr.rabbitMQChannel.PublishWithContext(ctx,
@@ -67,7 +68,7 @@ func (rr *RabbitMQPubRepository) PublishMessage(ctx context.Context, message typ
 		})
 	if err != nil {
 		rr.logger.Error("failed to publish message", zap.Error(err))
-		return otel.RecordError(errors.ErrInternal, err, "failed to publish message", span, rr.logger)
+		return otel.RecordError(errors.ErrInternal, err, "failed to publish message", span)
 	}
 
 	return nil

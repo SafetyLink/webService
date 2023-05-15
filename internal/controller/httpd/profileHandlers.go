@@ -20,8 +20,8 @@ func (s *WebServiceHttpServer) getUserProfileByID(c *fiber.Ctx) error {
 	return nil
 }
 
-func (s *WebServiceHttpServer) getProfile(c *fiber.Ctx) error {
-	profile, err := s.GrpcUserRepo.GetProfile(c.Context(), int64(2))
+func (s *WebServiceHttpServer) getSelf(c *fiber.Ctx) error {
+	profile, err := s.GrpcUserRepo.GetSelf(c.Context())
 	if err != nil {
 		return err
 	}

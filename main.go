@@ -4,11 +4,13 @@ import (
 	"context"
 	"github.com/SafetyLink/commons/config"
 	"github.com/SafetyLink/commons/logger"
+	"github.com/SafetyLink/commons/otel"
 	"github.com/SafetyLink/webService/internal"
 	"github.com/SafetyLink/webService/internal/controller/httpd"
 	"github.com/SafetyLink/webService/internal/domain/message"
 	"github.com/SafetyLink/webService/internal/infra/adapters/clients"
 	"github.com/SafetyLink/webService/internal/infra/adapters/rabbitMQ"
+	"github.com/SafetyLink/webService/internal/infra/grpcAuthenticationRepository"
 	"github.com/SafetyLink/webService/internal/infra/grpcUserRepository"
 	"github.com/SafetyLink/webService/internal/infra/rmqPublisherRepository"
 	"github.com/gofiber/fiber/v2"
@@ -23,13 +25,13 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-
 }
 
 func main() {
 	fx.New(
 		fx.Provide(logger.InitLogger),
 		fx.Provide(config.ReadConfig[internal.Config]),
+		fx.Provide(otel.InitTracer),
 
 		fx.Provide(rabbitMQ.NewRabbitMQProvider),
 
@@ -40,6 +42,7 @@ func main() {
 		fx.Provide(clients.GrpcAuthenticationClient),
 
 		fx.Provide(grpcUserRepository.NewGrpcUserRepository),
+		fx.Provide(grpcAuthenticationRepository.NewGrpcAuthenticationRepository),
 
 		fx.Provide(httpd.NewWebServiceHttpServer),
 
@@ -55,7 +58,6 @@ func StartHttpRouter(lc fx.Lifecycle, httpd *httpd.WebServiceHttpServer, logger 
 			go func() {
 				if err := app.Listen(config.Httpd.Port); err != nil {
 					logger.Fatal("Failed to start internal http server", zap.Error(err))
-
 				}
 			}()
 			return nil
@@ -68,4 +70,8 @@ func StartHttpRouter(lc fx.Lifecycle, httpd *httpd.WebServiceHttpServer, logger 
 			return nil
 		},
 	})
+}
+
+func GrpcServerHook() {
+
 }
