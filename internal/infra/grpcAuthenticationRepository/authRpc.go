@@ -14,10 +14,10 @@ func (gs *GrpcAuthenticationRepo) Login(ctx context.Context, email, password str
 		Email:    email,
 		Password: password,
 	})
-
 	if err != nil {
 		return "", err
 	}
+
 	return resp.JwtToken, nil
 }
 

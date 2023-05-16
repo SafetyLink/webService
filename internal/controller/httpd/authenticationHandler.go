@@ -21,15 +21,20 @@ func (s *WebServiceHttpServer) login(c *fiber.Ctx) error {
 	}
 
 	jwtToken, err := s.GrpcAuthRepo.Login(c.UserContext(), loginRequest.Email, loginRequest.Password)
-
-	if s, ok := status.FromError(err); ok {
-		if s.Code() == codes.InvalidArgument {
-			response.ErrorJson(c, 400, "invalid email or password")
-			return nil
-		} else {
-			response.ErrorJson(c, 500, err.Error())
-			return nil
+	if err != nil {
+		if s, ok := status.FromError(err); ok && err != nil {
+			if s.Code() == codes.NotFound {
+				response.ErrorJson(c, 400, "invalid email or password")
+				return nil
+			} else {
+				response.ErrorJson(c, 500, err.Error())
+				return nil
+			}
 		}
+	}
+	if jwtToken == "" {
+		response.ErrorJson(c, 400, "invalid email or password")
+		return nil
 	}
 
 	response.SuccessDataJson(c, 200, jwtToken)
